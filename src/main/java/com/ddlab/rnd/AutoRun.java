@@ -13,12 +13,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.ddlab.rnd.client.GraphQlClients;
+
 import graphql.kickstart.spring.webclient.boot.GraphQLRequest;
 import graphql.kickstart.spring.webclient.boot.GraphQLResponse;
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient;
 
 @Component
 public class AutoRun {
+	
+	@Autowired
+	private GraphQlClients client;
 	
 	@Autowired
     private GraphQLWebClient graphQLWebClient;
@@ -77,7 +82,6 @@ public class AutoRun {
         		""";
 		
 		 Map<String, Object> variables = new HashMap<>();
-//       variables.put("code", "IN");
        variables.put("fName", "Hati");
        variables.put("lName", "Ghoda");
        variables.put("sta1", "MARRIED");
@@ -96,7 +100,8 @@ public class AutoRun {
 	}
 	
 	public void call2() {
-		String queryStr2 = """
+		String queryStr2 = 
+				"""
         		query($eq1: String!, $eq2: String!) {
         				countries(filter: { code: { eq: $eq1 }, continent: { eq: $eq2 } }) {
 					        capital
@@ -206,7 +211,7 @@ public class AutoRun {
 
         //passing requestBody to server
         GraphQLResponse response = graphQLWebClient.post(request).block();
-        System.out.println(response.getRawResponse());
+        System.out.println("Raw Response: "+response.getRawResponse());
 
 //        System.out.println(response.get("country", String.class));
     }
@@ -215,14 +220,14 @@ public class AutoRun {
 	public void execute() {
 		System.out.println("Application started running ...");
 //		getGraphQLRespPayLoad();
-		
 //		call1();
-		
 //		call2();
-		
 //		mutationCall1();
+//		usingRestTemplatecall1();
 		
-		usingRestTemplatecall1();
+//		client.callUsingGraphQLWebClient(); // Working fine
+//		client.callUsingHttpGraphQlClient(); // Working fine
+		client.callUsingWebClient(); // Working fine
 	}
 
 }
